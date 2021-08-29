@@ -5,15 +5,19 @@ MAINTAINER Russell Jurney, russell.jurney@gmail.com
 
 WORKDIR /root
 
+# Avoid interactive timezone setup; adjust as needed
+ENV TZ=Europe/Vienna
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Update apt-get and install things
 RUN apt-get autoclean
 RUN apt-get update && \
-    apt-get install -y zip unzip curl bzip2 python-dev build-essential git libssl1.0.0 libssl-dev vim
+    apt-get install -y zip unzip curl bzip2 python-dev build-essential git libssl1.1 libssl-dev vim
 
 # Setup Oracle Java8
 RUN apt-get install -y software-properties-common debconf-utils && \
-    add-apt-repository -y ppa:webupd8team/java && \
-    apt-get update && \
+#    add-apt-repository -y ppa:webupd8team/java && \
+#    apt-get update && \
     apt-get install -y openjdk-8-jdk
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 
@@ -46,7 +50,7 @@ ENV HADOOP_CONF_DIR=/root/hadoop/etc/hadoop
 #
 # Install Spark: may need to update this link... see http://spark.apache.org/downloads.html
 #
-ADD http://mirror.navercorp.com/apache/spark/spark-2.4.6/spark-2.4.6-bin-hadoop2.7.tgz .
+ADD https://archive.apache.org/dist/spark/spark-2.4.6/spark-2.4.6-bin-hadoop2.7.tgz .
 RUN mkdir -p /root/spark && \
     tar -xvf spark-2.4.6-bin-hadoop2.7.tgz -C spark --strip-components=1
 ENV SPARK_HOME=/root/spark
@@ -122,7 +126,7 @@ RUN curl -LO https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-spar
 # Install and setup Kafka
 #
 WORKDIR /root
-ADD http://mirror.navercorp.com/apache/kafka/2.5.0/kafka_2.12-2.5.0.tgz .
+ADD https://archive.apache.org/dist/kafka/2.5.0/kafka_2.12-2.5.0.tgz .
 RUN mkdir -p /root/kafka && \
     tar -xvzf kafka_2.12-2.5.0.tgz -C kafka --strip-components=1
 
@@ -148,10 +152,10 @@ RUN pip install airflow && \
 # Install and setup Zeppelin
 #
 WORKDIR /root
-ADD http://apache.mirror.cdnetworks.com/zeppelin/zeppelin-0.9.0-preview1/zeppelin-0.9.0-preview1-bin-all.tgz /tmp/zeppelin-0.9.0-preview1-bin-all.tgz
+ADD https://archive.apache.org/dist/zeppelin/zeppelin-0.9.0/zeppelin-0.9.0-bin-all.tgz /tmp/zeppelin-0.9.0-bin-all.tgz
 RUN mkdir -p /root/zeppelin && \
-    tar -xvzf /tmp/zeppelin-0.9.0-preview1-bin-all.tgz -C zeppelin --strip-components=1 && \
-    rm -f /tmp/zeppelin-0.9.0-preview1-bin-all.tgz
+    tar -xvzf /tmp/zeppelin-0.9.0-bin-all.tgz -C zeppelin --strip-components=1 && \
+    rm -f /tmp/zeppelin-0.9.0-bin-all.tgz
 
 # Configure Zeppelin
 RUN cp /root/zeppelin/conf/zeppelin-env.sh.template /root/zeppelin/conf/zeppelin-env.sh && \
@@ -186,10 +190,10 @@ ADD http://av-info.faa.gov/data/ACRef/tab/prop.txt /root/Agile_Data_Code_2/data/
 # WBAN Master List
 ADD http://www.ncdc.noaa.gov/homr/file/wbanmasterlist.psv.zip /tmp/wbanmasterlist.psv.zip
 
-RUN for i in $(seq -w 1 12); do curl -Lko /tmp/QCLCD2015${i}.zip http://www.ncdc.noaa.gov/orders/qclcd/QCLCD2015${i}.zip && \
-    unzip -o /tmp/QCLCD2015${i}.zip && \
-    gzip 2015${i}*.txt && \
-    rm -f /tmp/QCLCD2015${i}.zip; done
+#RUN for i in $(seq -w 1 12); do curl -Lko /tmp/QCLCD2015${i}.zip http://www.ncdc.noaa.gov/orders/qclcd/QCLCD2015${i}.zip && \
+#    unzip -o /tmp/QCLCD2015${i}.zip && \
+#    gzip 2015${i}*.txt && \
+#    rm -f /tmp/QCLCD2015${i}.zip; done
 
 # Back to /root
 WORKDIR /root
