@@ -1,8 +1,7 @@
 # Setup an environment for running this book's examples
 
-FROM ubuntu
+FROM docker.devops.medel.com/devcontainer/python-machinelearning-devcontainer
 MAINTAINER Russell Jurney, russell.jurney@gmail.com
-
 WORKDIR /root
 
 # Avoid interactive timezone setup; adjust as needed
@@ -39,7 +38,7 @@ WORKDIR /root
 #
 # Install Hadoop: may need to update this link... see http://hadoop.apache.org/releases.html
 #
-RUN curl -O https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+RUN curl --insecure -O https://archive.apache.org/dist/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
 RUN mkdir -p /root/hadoop && \
     tar -xvf hadoop-2.7.3.tar.gz -C hadoop --strip-components=1
 ENV HADOOP_HOME=/root/hadoop
@@ -74,7 +73,7 @@ RUN cp /root/spark/conf/log4j.properties.template /root/spark/conf/log4j.propert
 #
 # Install Mongo, Mongo Java driver, and mongo-hadoop and start MongoDB
 #
-RUN curl https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
+RUN curl --insecure https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
 RUN echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y mongodb-org && \
@@ -83,7 +82,7 @@ RUN apt-get update && \
 RUN mongod --fork --logpath /var/log/mongodb.log --config /etc/mongod.conf
 
 # Get the MongoDB Java Driver and put it in Agile_Data_Code_2
-ADD https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/3.11.0/mongo-java-driver-3.11.0.jar /root/Agile_Data_Code_2/lib/
+ADD https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/3.4.0/mongo-java-driver-3.4.0.jar /root/Agile_Data_Code_2/lib/
 
 # Install the mongo-hadoop project in the mongo-hadoop directory in the root of our project.
 ADD https://github.com/mongodb/mongo-hadoop/archive/r2.0.2.tar.gz .
@@ -109,9 +108,9 @@ RUN rm -rf /root/mongo-hadoop
 # Install ElasticSearch in the elasticsearch directory in the root of our project, and the Elasticsearch for Hadoop package
 #
 WORKDIR /root
-RUN curl -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.8.0-linux-x86_64.tar.gz
+RUN curl --insecure -LO https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.tar.gz
 RUN mkdir /root/elasticsearch && \
-    tar -xvzf elasticsearch-7.8.0-linux-x86_64.tar.gz -C elasticsearch --strip-components=1
+    tar -xvzf elasticsearch-5.6.16.tar.gz -C elasticsearch --strip-components=1
 ENV PATH=/root/elasticsearch/bin:$PATH
 RUN useradd es
 RUN chown es:es /root
@@ -119,8 +118,8 @@ RUN chown -R es:es /root/elasticsearch
 
 # Install Elasticsearch for Hadoop
 WORKDIR /root/Agile_Data_Code_2/lib
-RUN curl -LO https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-hadoop/7.8.0/elasticsearch-hadoop-7.8.0.jar
-RUN curl -LO https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-spark-20_2.11/7.8.0/elasticsearch-spark-20_2.11-7.8.0.jar
+RUN curl --insecure -LO https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-hadoop/5.6.16/elasticsearch-hadoop-5.6.16.jar
+RUN curl --insecure -LO https://repo1.maven.org/maven2/org/elasticsearch/elasticsearch-spark-20_2.11/5.6.16/elasticsearch-spark-20_2.11-5.6.16.jar
 
 #
 # Install and setup Kafka
@@ -190,7 +189,7 @@ ADD http://av-info.faa.gov/data/ACRef/tab/prop.txt /root/Agile_Data_Code_2/data/
 # WBAN Master List
 ADD http://www.ncdc.noaa.gov/homr/file/wbanmasterlist.psv.zip /tmp/wbanmasterlist.psv.zip
 
-#RUN for i in $(seq -w 1 12); do curl -Lko /tmp/QCLCD2015${i}.zip http://www.ncdc.noaa.gov/orders/qclcd/QCLCD2015${i}.zip && \
+#RUN for i in $(seq -w 1 12); do curl --insecure -Lko /tmp/QCLCD2015${i}.zip http://www.ncdc.noaa.gov/orders/qclcd/QCLCD2015${i}.zip && \
 #    unzip -o /tmp/QCLCD2015${i}.zip && \
 #    gzip 2015${i}*.txt && \
 #    rm -f /tmp/QCLCD2015${i}.zip; done
@@ -201,5 +200,7 @@ WORKDIR /root
 # Cleanup
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN cp /root/Agile_Data_Code_2/lib/*.jar /root/spark/jars/
 
 # Done!
