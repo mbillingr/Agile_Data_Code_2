@@ -174,10 +174,10 @@ WORKDIR /root/Agile_Data_Code_2/data
 ADD http://s3.amazonaws.com/agile_data_science/On_Time_On_Time_Performance_2015.csv.gz /root/Agile_Data_Code_2/data/On_Time_On_Time_Performance_2015.csv.gz
 
 # Openflights data
-ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat /root/Agile_Data_Code_2/data/airports.dat
-ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat /root/Agile_Data_Code_2/data/airlines.dat
-ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat /root/Agile_Data_Code_2/data/routes.dat
-ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/countries.dat /root/Agile_Data_Code_2/data/countries.dat
+ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat /root/Agile_Data_Code_2/data/airports.csv
+ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/airlines.dat /root/Agile_Data_Code_2/data/airlines.csv
+ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat /root/Agile_Data_Code_2/data/routes.csv
+ADD https://raw.githubusercontent.com/jpatokal/openflights/master/data/countries.dat /root/Agile_Data_Code_2/data/countries.csv
 
 # FAA data
 ADD http://av-info.faa.gov/data/ACRef/tab/aircraft.txt /root/Agile_Data_Code_2/data/aircraft.txt
@@ -202,5 +202,7 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN cp /root/Agile_Data_Code_2/lib/*.jar /root/spark/jars/
+
+RUN ln -s /root/Agile_Data_Code_2 /
 
 # Done!

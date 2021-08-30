@@ -4,6 +4,7 @@ Running
 ```
 $> docker build -t agile-data-science-2 .
 $> docker run -p 8888:8888 -p 5000:5000 -p 8080:8080 --name ads2 agile-data-science-2
+$> docker run -p 8888:8888 -p 5000:5000 -p 8080:8080 -v `pwd`:/root/Agile_Data_Science_2 --name ads2 agile-data-science-2
 ```
 
 Setup Issues
