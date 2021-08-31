@@ -1,3 +1,16 @@
+try:
+  sc and spark
+except (NameError, UnboundLocalError) as e:
+
+  import findspark
+
+  findspark.init()
+  import pyspark
+  import pyspark.sql
+
+  sc = pyspark.SparkContext()
+  spark = pyspark.sql.SparkSession(sc).builder.appName("Agile Data Science").getOrCreate()
+
 # Load the FAA N-Number Inquiry Records
 faa_tail_number_inquiry = spark.read.json('data/faa_tail_number_inquiry.jsonl')
 faa_tail_number_inquiry.show()

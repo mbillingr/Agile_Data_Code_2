@@ -12,12 +12,14 @@ our_airlines = utils.read_json_lines_file('data/our_airlines.jsonl')
 # Build a new list that includes wikipedia data
 with_url = []
 for airline in our_airlines:
+  print(airline)
   # Get the wikipedia page for the airline name
-  wikipage = wikipedia.page(airline['Name'])
+  wikipage = wikipedia.page(airline['Name'], auto_suggest=False)
 
   # Get the summary
   summary = wikipage.summary
   airline['summary'] = summary
+  print(summary)
 
   # Get the HTML of the page
   page = BeautifulSoup(wikipage.html())

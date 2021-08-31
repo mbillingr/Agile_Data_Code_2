@@ -1,3 +1,16 @@
+try:
+    sc and spark
+except (NameError, UnboundLocalError) as e:
+
+    import findspark
+
+    findspark.init()
+    import pyspark
+    import pyspark.sql
+
+    sc = pyspark.SparkContext()
+    spark = pyspark.sql.SparkSession(sc).builder.appName("Agile Data Science").getOrCreate()
+
 # Load the parquet file
 on_time_dataframe = spark.read.parquet('data/on_time_performance.parquet')
 on_time_dataframe.registerTempTable("on_time_performance")
