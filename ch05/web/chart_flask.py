@@ -203,6 +203,11 @@ def total_flights_json():
       ('Year', 1),
       ('Month', 1)
     ])
+  total_flights = list(total_flights)
+  for row in total_flights:
+    row['Month'] = int(row['Month'])
+    row['Year'] = int(row['Year'])
+  total_flights = sorted(total_flights, key=lambda row: row['Month'])
   return json_util.dumps(total_flights, ensure_ascii=False)
 
 
