@@ -9,8 +9,8 @@ import datetime
 print("Imports loaded...")
 
 # Load and check the size of our training data. May take a minute.
-print("Original JSON file size: {:,} Bytes".format(os.path.getsize("data/simple_flight_delay_features.jsonl")))
-training_data = utils.read_json_lines_file('data/simple_flight_delay_features.jsonl')
+print("Original JSON file size: {:,} Bytes".format(os.path.getsize("data/simple_flight_delay_features.jsonl.bz2")))
+training_data = utils.read_json_lines_file('data/simple_flight_delay_features.jsonl.bz2')
 print("Training items: {:,}".format(len(training_data))) # 5,714,008
 print("Data loaded...")
 
