@@ -4,22 +4,22 @@ import sys, os, re
 import json
 import datetime, iso8601
 
+APP_NAME = "train_spark_mllib_model.py"
+
+# If there is no SparkSession, create the environment
+try:
+  sc and spark
+except NameError as e:
+  import findspark
+  findspark.init()
+  import pyspark
+  import pyspark.sql
+
+  sc = pyspark.SparkContext()
+  spark = pyspark.sql.SparkSession(sc).builder.appName(APP_NAME).getOrCreate()
+
 # Pass date and base path to main() from airflow
 def main(base_path):
-  
-  APP_NAME = "train_spark_mllib_model.py"
-  
-  # If there is no SparkSession, create the environment
-  try:
-    sc and spark
-  except NameError as e:
-    import findspark
-    findspark.init()
-    import pyspark
-    import pyspark.sql
-    
-    sc = pyspark.SparkContext()
-    spark = pyspark.sql.SparkSession(sc).builder.appName(APP_NAME).getOrCreate()
 
   #
   # {

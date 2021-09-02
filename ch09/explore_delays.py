@@ -4,6 +4,19 @@ import sys, os, re
 import json
 import datetime, iso8601
 
+try:
+  sc and spark
+except (NameError, UnboundLocalError) as e:
+
+  import findspark
+
+  findspark.init()
+  import pyspark
+  import pyspark.sql
+
+  sc = pyspark.SparkContext()
+  spark = pyspark.sql.SparkSession(sc).builder.appName("Agile Data Science").getOrCreate()
+
 base_path = "."
 
 from pyspark.sql.types import StringType, IntegerType, FloatType, DoubleType, DateType, TimestampType
