@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Fetch the delay prediction for a hypothetical flight
-curl -XPOST 'http://localhost:5000/flights/delays/predict/classify' \
+curl -XPOST 'http://localhost:5000/flights/delays/predict/classify_realtime' \
   -F 'DepDelay=5.0' \
   -F 'Carrier=AA' \
   -F 'FlightDate=2016-12-23' \

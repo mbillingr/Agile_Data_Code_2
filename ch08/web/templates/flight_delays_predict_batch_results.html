@@ -40,6 +40,8 @@
                             Slightly Late (15-60 Minute Delay)
                         {% elif item['Prediction'] == 2.0 %}
                             Very Late (60+ Minute Delay)
+                        {% else  %}
+                            {{ item['Prediction'] }}
                         {% endif %}
                     </span>
                 </td>

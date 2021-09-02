@@ -4,6 +4,21 @@ import sys, os, re
 import json
 import datetime, iso8601
 
+APP_NAME = "fetch_prediction_requests.py"
+
+# If there is no SparkSession, create the environment
+try:
+  sc and spark
+except NameError as e:
+  import findspark
+
+  findspark.init()
+  import pyspark
+  import pyspark.sql
+
+  sc = pyspark.SparkContext()
+  spark = pyspark.sql.SparkSession(sc).builder.appName(APP_NAME).getOrCreate()
+
 # Save to Mongo
 from bson import json_util
 import pymongo_spark
@@ -11,20 +26,6 @@ pymongo_spark.activate()
 
 # Pass date and base path to main() from airflow
 def main(iso_date, base_path):
-  
-  APP_NAME = "fetch_prediction_requests.py"
-  
-  # If there is no SparkSession, create the environment
-  try:
-    sc and spark
-  except NameError as e:
-    import findspark
-    findspark.init()
-    import pyspark
-    import pyspark.sql
-    
-    sc = pyspark.SparkContext()
-    spark = pyspark.sql.SparkSession(sc).builder.appName(APP_NAME).getOrCreate()
   
   # Get today and tomorrow's dates as iso strings to scope query
   today_dt = iso8601.parse_date(iso_date)
